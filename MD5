@@ -1,0 +1,14 @@
+5c4c126db4fd15fb4cfef93d16051ec3 *DESCRIPTION
+40c13ca32b33e5aa43fe1627166550bb *NAMESPACE
+1647dc457f759ad860da544f33910ff2 *NEWS
+4c65d315a8e60cbfe48d5654cb0e9751 *R/lagsarlmtree.R
+57359643c4da5b79ea79f20ee256269f *build/partial.rdb
+07ba5a5e9e93d9b2bc36e7ebd12ad381 *data/GrowthNUTS2.rda
+c14657ade5cf3f308e37159b7b775729 *data/WeightsNUTS2.rda
+0bb8a171dadee667d4f684ef62cf90ce *data/datalist
+01293abd8d3e4025f281e9370db0a178 *demo/00Index
+1a0b7b821ea5e4d8f3946ced5c3e025c *demo/GrowthNUTS2.R
+1c3da7312dd991002411bd4bd524ff94 *inst/CITATION
+2f38ea7d5ec88e182a352578446d5433 *man/GrowthNUTS2.Rd
+689ac54e1688051cab29ab21d9acd45c *man/WeightsNUTS2.Rd
+badb0d07a6a2b028a819b371f67c731e *man/lagsarlmtree.Rd

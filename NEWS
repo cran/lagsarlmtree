@@ -1,0 +1,11 @@
+Changes in Version 1.0-0
+
+  o First CRAN release of the "lagsarlmtree" package accompanying the acceptance
+    of the corresponding manuscript "Heterogeneity and Spatial Dependence of
+    Regional Growth in the EU: A Recursive Partitioning Approach" in the German
+    Economic Review (doi:10.1111/geer.12146). A preprint version is available
+    online at: https://eeecon.uibk.ac.at/~zeileis/papers/Wagner+Zeileis-2017.pdf
+
+  o Replication materials for the manuscript are available in the package as:
+    demo("GrowthNUTS2", package = "lagsarlmtree")
+

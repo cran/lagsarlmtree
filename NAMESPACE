@@ -1,0 +1,19 @@
+import("partykit")
+import("stats")
+import("graphics")
+import("grid")
+import("Formula")
+import("spdep")
+
+export(
+  "lagsarlmtree",
+  "sctest.lagsarlmtree"
+)
+
+## methods for class lmtree
+S3method("coef", "lagsarlmtree")
+S3method("logLik", "lagsarlmtree")
+S3method("plot", "lagsarlmtree")
+S3method("predict", "lagsarlmtree")
+S3method("print", "lagsarlmtree")
+
