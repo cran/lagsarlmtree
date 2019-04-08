@@ -6,6 +6,7 @@
 \alias{logLik.lagsarlmtree}
 \alias{predict.lagsarlmtree}
 \alias{sctest.lagsarlmtree}
+\alias{impacts.lagsarlmtree}
 
 \title{Spatial Lag Model Trees}
 
@@ -15,7 +16,8 @@
 }
 
 \usage{
-lagsarlmtree(formula, data, listw = NULL,
+lagsarlmtree(formula, data, listw = NULL, method = "eigen",
+  zero.policy = NULL, interval = NULL, control = list(),
   rhowystart = NULL, abstol = 0.001, maxit = 100, 
   dfsplit = TRUE, verbose = FALSE, plot = FALSE, ...)
 }
@@ -25,7 +27,14 @@ lagsarlmtree(formula, data, listw = NULL,
     and partitioning variables, respectively. For details see below.}
   \item{data}{data.frame to be used for estimating the model tree.}
   \item{listw}{a weights object for the spatial lag part of the model.}
-  \item{rhowystart}{numeric. A vector of length \code{nrow(data)}, to be used as
+  \item{method}{"eigen" (default) - the Jacobian is computed as the product 
+of (1 - rho*eigenvalue) using \code{eigenw}, and "spam" or "Matrix_J" for strictly symmetric weights lists of styles "B" and "C", or made symmetric by similarity (Ord, 1975, Appendix C) if possible for styles "W" and "S", using code from the spam or Matrix packages to calculate the determinant; \dQuote{Matrix} and \dQuote{spam_update} provide updating Cholesky decomposition methods; "LU" provides an alternative sparse matrix decomposition approach. In addition, there are "Chebyshev" and Monte Carlo "MC" approximate log-determinant methods; the Smirnov/Anselin (2009) trace approximation is available as "moments". Three methods: "SE_classic", "SE_whichMin", and "SE_interp" are provided experimentally, the first to attempt to emulate the behaviour of Spatial Econometrics toolbox ML fitting functions. All use grids of log determinant values, and the latter two attempt to ameliorate some features of "SE_classic".
+}
+   \item{zero.policy}{default NULL, use global option value; if TRUE assign zero to the lagged value of zones without 
+neighbours, if FALSE (default) assign NA - causing \code{lagsarlm()} to terminate with an error}
+   \item{interval}{default is NULL, search interval for autoregressive parameter}
+   \item{control}{list of extra control arguments - see \code{\link[spdep]{lagsarlm}}}
+   \item{rhowystart}{numeric. A vector of length \code{nrow(data)}, to be used as
     an offset in estimation of the first tree. \code{NULL} by default,
     which results in an initialization with the root model (without partitioning).}
   \item{abstol}{numeric. The convergence criterion used for estimation of the model.
@@ -85,11 +94,11 @@ The function returns a list with the following objects:
 \seealso{\code{\link[stats]{lm}}, \code{\link[spdep]{lagsarlm}}, \code{\link[partykit]{lmtree}}}
 
 \references{ 
-  Wagner M, Zeileis A (2017).
+  Wagner M, Zeileis A (2019).
     Heterogeneity and Spatial Dependence of Regional Growth in the EU: A Recursive Partitioning Approach.
-    German Economic Review, Forthcoming.
+    German Economic Review, \bold{20}(1), 67--82.
     \doi{10.1111/geer.12146}
-    \url{https://eeecon.uibk.ac.at/~zeileis/papers/Wagner+Zeileis-2017.pdf}
+    \url{https://eeecon.uibk.ac.at/~zeileis/papers/Wagner+Zeileis-2019.pdf}
 }
 
 \examples{
@@ -98,10 +107,10 @@ data("GrowthNUTS2", package = "lagsarlmtree")
 data("WeightsNUTS2", package = "lagsarlmtree")
 
 ## spatial lag model tree
-tr <- lagsarlmtree(ggdpcap ~ gdpcap0 + shgfcf + shsh + shsm |
+system.time(tr <- lagsarlmtree(ggdpcap ~ gdpcap0 + shgfcf + shsh + shsm |
     gdpcap0 + accessrail + accessroad + capital + regboarder + regcoast + regobj1 + cee + piigs,
   data = GrowthNUTS2, listw = WeightsNUTS2$invw,
-  minsize = 12, alpha = 0.05)
+  minsize = 12, alpha = 0.05))
 print(tr)
 plot(tr, tp_args = list(which = 1))
 
@@ -109,6 +118,14 @@ plot(tr, tp_args = list(which = 1))
 coef(tr, model = "tree")
 coef(tr, model = "rho")
 coef(tr, model = "all")
+system.time({
+ev <- eigenw(WeightsNUTS2$invw)
+tr1 <- lagsarlmtree(ggdpcap ~ gdpcap0 + shgfcf + shsh + shsm |
+    gdpcap0 + accessrail + accessroad + capital + regboarder + regcoast + regobj1 + cee + piigs,
+  data = GrowthNUTS2, listw = WeightsNUTS2$invw, method = "eigen",
+  control = list(pre_eig = ev), minsize = 12, alpha = 0.05)
+})
+coef(tr1, model = "rho")
 }
 
 \keyword{tree}

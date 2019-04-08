@@ -3,7 +3,7 @@ import("stats")
 import("graphics")
 import("grid")
 import("Formula")
-import("spdep")
+import("spatialreg")
 
 export(
   "lagsarlmtree",
@@ -16,4 +16,5 @@ S3method("logLik", "lagsarlmtree")
 S3method("plot", "lagsarlmtree")
 S3method("predict", "lagsarlmtree")
 S3method("print", "lagsarlmtree")
+S3method("impacts", "lagsarlmtree")
 

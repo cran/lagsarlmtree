@@ -1,6 +1,7 @@
 utils::globalVariables(c(".tree", ".rhowy"))
 
-lagsarlmtree <- function(formula, data, listw = NULL,
+lagsarlmtree <- function(formula, data, listw = NULL, method = "eigen",
+  zero.policy = NULL, interval = NULL, control = list(),
   rhowystart = NULL, abstol = 0.001, maxit = 100, 
   dfsplit = TRUE, verbose = FALSE, plot = FALSE, ...)
 {
@@ -25,7 +26,8 @@ lagsarlmtree <- function(formula, data, listw = NULL,
   ## initialization
   iteration <- 0L
   if (is.null(rhowystart)) {
-    rhowystart <- lagsarlm(rf0, data = data, listw = listw)
+    rhowystart <- lagsarlm(rf0, data = data, listw = listw, method = method,
+      zero.policy = zero.policy, interval = interval, control = control)
     rhowystart <- rhowystart$rho * lag(listw, rhowystart$y)
   }
   data$.rhowy <- rhowystart  
@@ -45,9 +47,11 @@ lagsarlmtree <- function(formula, data, listw = NULL,
     ## estimate full lm model but force all coefficients from the
     ## .tree (and the overall intercept) to zero for the prediction
     lagsarlm <- if(length(levels(data$.tree)) > 1L) {
-      lagsarlm(rf, data = data, listw = listw)
+      lagsarlm(rf, data = data, listw = listw, method = method,
+      zero.policy = zero.policy, interval = interval, control = control)
     } else {
-      lagsarlm(rf0, data = data, listw = listw)
+      lagsarlm(rf0, data = data, listw = listw, method = method,
+      zero.policy = zero.policy, interval = interval, control = control)
     }
     data$.rhowy <- lagsarlm$rho * lag(listw, lagsarlm$y)
 
@@ -124,3 +128,9 @@ predict.lagsarlmtree <- function(object, newdata = NULL, type = "response", ...)
     predict(object$lagsarlm, newdata = newdata, type = type, ...)
   }
 }
+
+impacts.lagsarlmtree <- function(obj, ...) {
+  impacts(obj$lagsarlm, ...)
+}
+
+
